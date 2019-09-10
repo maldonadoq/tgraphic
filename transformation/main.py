@@ -47,9 +47,8 @@ def mrotate(img_in, angle, center = None):
 	rows = img_in.shape[0]
 	cols = img_in.shape[1]
 
-	if(angle%90 != 0):
-		shape = (floor(rows*2),floor(cols*2))
-		img_out = np.zeros(shape, img_in.dtype)
+	shape = (rows*2, cols*2)
+	img_out = np.zeros(shape, img_in.dtype)
 
 	if(center is None):
 		center = (rows//2, cols//2)
@@ -74,13 +73,13 @@ if __name__ == "__main__":
     tscale  = mscale(img, 2, 2)
     trotate = mrotate(img, 45)
 
-    """cv.imwrite('../images/output/translation.jpg', ttrans)
+    cv.imwrite('../images/output/translation.jpg', ttrans)
     cv.imwrite('../images/output/scale.jpg', tscale)
-    cv.imwrite('../images/output/rotate.jpg', trotate)"""
+    cv.imwrite('../images/output/rotate.jpg', trotate)
 
-    cv.imshow('Translation', ttrans)
+    """cv.imshow('Translation', ttrans)
     cv.imshow('Scale', tscale)
     cv.imshow('Rotate', trotate)
 
     cv.waitKey()
-    cv.destroyAllWindows()
+    cv.destroyAllWindows()"""

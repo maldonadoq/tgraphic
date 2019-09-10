@@ -12,6 +12,8 @@ def mlogarithm_inverse(x, c = 1):
 
 def mlogarithm_inverse(img_in, c = 1):
     shape = img_in.shape
+    if(len(img_in.shape) == 3):
+        shape = (shape[0], shape[1], 0)
     img_out = np.empty(shape, img_in.dtype)
 
     for i in range(shape[0]):
@@ -29,21 +31,15 @@ def mnegative(x):
     return 255 - x
 
 if __name__ == "__main__":
-    img = cv.imread('../images/input/lena.jpg', 0)
+    img = cv.imread('../images/input/woman.jpg', 0)
+    cv.imwrite('../images/output/woman.jpg', img)
 
-    tlog      = mlogarithm(img)
-    tloginve  = mlogarithm_inverse(img)
-    tpow 	  = mpower(img, 2)
+    tlog      = mlogarithm(img, 1.2)
+    tloginve  = mlogarithm_inverse(img, 1.2)
+    tpow 	  = mpower(img, 0.25)
     tneg  	  = mnegative(img)
 
     cv.imwrite('../images/output/logaritmo.jpg', tlog)
     cv.imwrite('../images/output/logaritmo_inverso.jpg', tloginve)
     cv.imwrite('../images/output/power.jpg', tpow)
     cv.imwrite('../images/output/negative.jpg', tneg)
-
-    """cv.imshow('Logarithm', tlog)
-    cv.imshow('Inverse Logarithm', tloginve)
-    cv.imshow('Power', tpow)
-    #cv.imshow('Negative', tneg)
-    cv.waitKey()
-    cv.destroyAllWindows()"""
