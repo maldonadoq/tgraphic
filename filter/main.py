@@ -69,6 +69,7 @@ def mfilter(img_in, hfilter):
             ct1 = j + step + 1
             window = img_in[rt0:rt1, ct0:ct1]
             nv = (window * hfilter).sum()
+            #nv = abs((window * hfilter).sum())
             img_out[i,j] = nv
             
     return mnormalize(img_out)
@@ -120,6 +121,7 @@ def gauss_kernel(wsize, sigma):
 
 if __name__ == "__main__":
     img = cv.imread('../images/input/coins.png', 0)
+    #img = cv.imread('../images/input/albert.jpg', 0)
 
     window_size = 3
 
@@ -146,7 +148,6 @@ if __name__ == "__main__":
     #cv.imwrite('../images/output/mediana.jpg', tmedian)
     #cv.imwrite('../images/output/min.jpg', tmin)
     #cv.imwrite('../images/output/max.jpg', tmax)
-    #cv.imwrite('../images/output/max.jpg', tmax)
 
     cv.imwrite('../images/output/laplace.jpg', tlaplace)
     cv.imwrite('../images/output/robert.jpg', trobert)
@@ -162,6 +163,11 @@ if __name__ == "__main__":
     cv.imshow('Robert', trobert)
     cv.imshow('Sobel', tsobel)
     cv.imshow('Gauss', tgauss)
+
+    #xtest    = mfilter(img, hxsobel)
+    #ytest    = mfilter(img, hysobel)
+    #cv.imshow('Sobel x', xtest)
+    #cv.imshow('Sobel y', ytest)
 
     cv.waitKey()
     cv.destroyAllWindows()
