@@ -68,13 +68,13 @@ def mfilter(img_in, hfilter):
             ct0 = j - step
             ct1 = j + step + 1
             window = img_in[rt0:rt1, ct0:ct1]
-            nv = (window * hfilter).sum()
-            #nv = abs((window * hfilter).sum())
+            #nv = (window * hfilter).sum()
+            nv = abs((window * hfilter).sum())
             img_out[i,j] = nv
             
     return mnormalize(img_out)
 
-# Filters with two mask (Robert, Sobel, Prebits)
+# Filters with two mask (Robert, Sobel, Prewitt)
 def nfilter(img_in, xfilter, yfilter):
     img_out = np.zeros(img_in.shape, int)
     rows = img_in.shape[0]
@@ -94,8 +94,10 @@ def nfilter(img_in, xfilter, yfilter):
             ct0 = j - step
             ct1 = j + step + 1
             window = img_in[rt0:rt1, ct0:ct1]
-            hx = (window*xfilter).sum()
-            hy = (window*yfilter).sum()
+            #hx = (window*xfilter).sum()
+            #hy = (window*yfilter).sum()
+            hx = abs((window*xfilter).sum())
+            hy = abs((window*yfilter).sum())
 
             img_out[i,j] = hx + hy
 
@@ -120,8 +122,8 @@ def gauss_kernel(wsize, sigma):
     return kernel//tmin
 
 if __name__ == "__main__":
-    img = cv.imread('../images/input/coins.png', 0)
-    #img = cv.imread('../images/input/albert.jpg', 0)
+    #img = cv.imread('../images/input/coins.png', 0)
+    img = cv.imread('../images/input/bike.jpg', 0)
 
     window_size = 3
 
@@ -136,13 +138,16 @@ if __name__ == "__main__":
     hyrobert = np.array([[0,-1,0], [1,0,0], [0,0,0]])
     hxsobel  = np.array([[-1,0,1], [-2,0,2], [-1,0,1]])
     hysobel  = np.array([[-1,-2,-1], [0,0,0], [1,2,1]])
+    hxprewit = np.array([[1,0,-1], [1,0,-1], [1,0,-1]])
+    hyprewit = np.array([[1,1,1], [0,0,0], [-1,-1,-1]])
 
     hgauss   = gauss_kernel(3,0.8)
 
     tlaplace = mfilter(img, hlaplace)
     trobert  = nfilter(img, hxrobert, hyrobert)
     tsobel   = nfilter(img, hxsobel, hysobel)
-    tgauss    = mfilter(img, hgauss)
+    tprewitt = nfilter(img, hxprewit, hyprewit)
+    tgauss   = mfilter(img, hgauss)
 
     #cv.imwrite('../images/output/media.jpg', tmedia)
     #cv.imwrite('../images/output/mediana.jpg', tmedian)
@@ -152,6 +157,7 @@ if __name__ == "__main__":
     cv.imwrite('../images/output/laplace.jpg', tlaplace)
     cv.imwrite('../images/output/robert.jpg', trobert)
     cv.imwrite('../images/output/sobel.jpg', tsobel)
+    cv.imwrite('../images/output/prewitt.jpg', tprewitt)
     cv.imwrite('../images/output/gauss.jpg', tgauss)
 
     #cv.imshow('Media', tmedia)
@@ -162,6 +168,7 @@ if __name__ == "__main__":
     cv.imshow('Laplace', tlaplace)
     cv.imshow('Robert', trobert)
     cv.imshow('Sobel', tsobel)
+    cv.imshow('Prewitt', tprewitt)
     cv.imshow('Gauss', tgauss)
 
     #xtest    = mfilter(img, hxsobel)
