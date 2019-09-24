@@ -62,3 +62,27 @@ def mimg_half(img_in):
 
 	img_out = img_in[0:rows, 0:cols]
 	return img_out
+
+# Normalize
+def mnormalize(img_in):
+    img_out = np.zeros(img_in.shape, dtype="uint8")
+    tmin = img_in.min()
+    tmax = img_in.max()
+    nmax = abs(tmax - tmin)
+
+    for i in range(img_out.shape[0]):
+        for j in range(img_out.shape[1]):
+            nv = ((img_in[i,j] - tmin) * 255)/nmax
+            img_out[i,j] = nv
+
+    return img_out
+
+def mto_float(img_in):
+    img_out = np.zeros(img_in.shape, float)
+    for i in range(img_out.shape[0]):
+        for j in range(img_out.shape[1]):
+        	img_out[i,j] = img_in[i,j].real
+        	#img_out[i,j] = abs(img_in[i,j].real)
+            #img_out[i,j] = sqrt(pow(img_in[i,j].real, 2) + pow(img_in[i,j].imag, 2))
+
+    return img_out
