@@ -46,9 +46,9 @@ class DiscreteFourier(object):
 		ft = np.log(np.abs(self.shit(self.forward())) ** 2)
 		cv.imshow("Fourier Transform", mnormalize(ft))
 
-	def idft(self):
-		M = self.F.shape[0]
-		N = self.F.shape[1]
+	def idft(self, I):
+		M = I.shape[0]
+		N = I.shape[1]
 
 		x = np.arange(M, dtype = float)
 		y = np.arange(N, dtype = float)
@@ -59,16 +59,15 @@ class DiscreteFourier(object):
 		exp1 = pow(np.e, (2j * np.pi * u * x)/M)
 		exp2 = pow(np.e, (2j * np.pi * v * y)/N)
 
-		self.f = np.dot(exp2, np.dot(exp1, self.F).transpose())
+		self.f = np.dot(exp2, np.dot(exp1, I).transpose())
 		return self.f
 
 	def filter(self, _filter, _name = "Ideal Low-Pass"):
-		self.F = self.F * _filter
-		
-		tdft  = np.log(np.abs(self.shit(self.F) ** 2))
+		X = self.F * _filter
+		tdft  = np.log(np.abs(self.shit(X) ** 2))
 
-		self.idft()
-		tidft = np.abs(self.f)
+		x = self.idft(X)
+		tidft = np.abs(x)
 
 		img = np.concatenate((mnormalize(tdft), mnormalize(tidft)), axis=1)
 		cv.imshow(_name, img)

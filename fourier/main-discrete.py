@@ -8,9 +8,10 @@ from utils import *
 from discrete import DiscreteFourier
 
 if __name__ == "__main__":
-    img = cv.imread('../images/input/lena.jpg', 0)
+    shape = (300, 300)
+    img = cv.imread('../images/input/albert.jpg', 0)
+    img = cv.resize(img, shape, interpolation = cv.INTER_AREA)
     
-    shape = img.shape
     d0 = 50
 
     fourier = DiscreteFourier()
@@ -19,11 +20,13 @@ if __name__ == "__main__":
 
     kil = mfilter(shape, mideal_lowpass, d0)
     kbl = mfilter(shape, mbutterworth_lowpass, d0)
+    kgl = mfilter(shape, mgaussian_lowpass, d0, 0.7)
 
     kih = mfilter(shape, mideal_highpass, d0)
     kbh = mfilter(shape, mbutterworth_highpass, d0)
+    kgh = mfilter(shape, mgaussian_highpass, d0, 0.7)
 
-    #fourier.filter(kbl, "ButterWorth Low-Pass")
+    fourier.filter(kbl, "ButterWorth Low-Pass")
     fourier.filter(kbh, "ButterWorth High-Pass")
 
     cv.waitKey()
