@@ -46,7 +46,7 @@ def mfilter(shape, op,  d0, on = 2):
 			dist = mdistance((i,j), center)
 			tfilter[i,j] = op(dist, d0, on)
 
-	return tfilter
+	return mshift(tfilter)
 
 #Image Double and Half
 def mimg_double(img_in):
@@ -77,18 +77,9 @@ def mnormalize(img_in):
 
     return img_out
 
-def mto_float(img_in):
-    img_out = np.zeros(img_in.shape, float)
-    for i in range(img_out.shape[0]):
-        for j in range(img_out.shape[1]):
-        	img_out[i,j] = abs(img_in[i,j])
-
-    return img_out
-
 def mprint(img):
 	for i in range(img.shape[0]):
 		for j in range(img.shape[1]):
-			#print("%2.2f"%img[i,j], end = ' ')
 			print(img[i,j], end = ' ')
 		print()
 	print('\n')
@@ -98,3 +89,20 @@ def mlog(x):
 	if(x == 0):
 		x = 0.0000000001
 	return np.log(x)
+
+
+#Fourier
+def mshift(_image):
+	M = _image.shape[0]
+	N = _image.shape[1]
+
+	m = int(M/2)
+	n = int(N/2)
+
+	temp = np.zeros((M,N))
+	temp[m:,n:] = np.abs(np.copy(_image[:m,:n])) #top-left
+	temp[m:,:n] = np.abs(np.copy(_image[:m,n:])) #top-right
+	temp[:m,n:] = np.abs(np.copy(_image[m:,:n])) #botton-left
+	temp[:m,:n] = np.abs(np.copy(_image[m:,n:])) #botton-right
+
+	return temp

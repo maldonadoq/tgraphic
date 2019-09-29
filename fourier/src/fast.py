@@ -2,18 +2,20 @@ import cmath
 import cv2 as cv
 import numpy as np
 from math import (log, ceil)
-from utils import mnormalize, mto_float
+from utils import mnormalize, mlog, mshift
 
-def mfourier(img_in, tfilter, name = "Fast Fourier Transform"):
-    tfft, m, n = mfast_fourier(img_in)
-    tfft = tfft * tfilter
-    tifft = mifast_fourier(tfft, m, n)
+def mfourier_filter(fft, tshape, tfilter, name = "Fast Fourier Transform"):	
+	tfft, m, n = fft
+	tfft = tfft * tfilter
+	tifft = mifast_fourier(tfft, m, n)
 
-    X = mnormalize(np.abs((tfft)))
-    x = mnormalize(tifft)
+	tX = mnormalize(mlog(np.abs(mshift(tfft))) ** 2)
+	X = cv.resize(tX, tshape)
 
-    img_out = np.concatenate((X, x), axis=1)
-    cv.imshow(name, img_out)
+	x = mnormalize(np.abs(tifft))
+
+	img_out = np.concatenate((X, x), axis=1)
+	cv.imshow(name, img_out)
 
 '''FFT of 2-d Images with padding usage X, m, n = mfast_fourier(x)'''
 def mfast_fourier(f):
@@ -26,8 +28,7 @@ def mifast_fourier(F, m, n):
 	f, M, N = mfast_fourier(np.conj(F))
 	f = np.matrix(np.real(np.conj(f))) / (M*N)
 
-	#return f[0:m, 0:n]
-	return f
+	return f[:m, :n]
 
 def mpadding(f):
 	m, n = f.shape

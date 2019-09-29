@@ -9,8 +9,8 @@ from discrete import DiscreteFourier
 
 if __name__ == "__main__":
     shape = (300, 300)
-    img = cv.imread('../images/input/albertt.jpg', 0)
-    img = cv.resize(img, shape, interpolation = cv.INTER_AREA)
+    img = cv.imread('../images/input/aa.png', 0)
+    img = cv.resize(img, shape)
     
     d0 = 100
 
