@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-from utils import mnormalize
+from utils import mnormalize, mlog, mprint
 
 class DiscreteFourier(object):
 	def __init__(self):
@@ -19,9 +19,9 @@ class DiscreteFourier(object):
 		n = int(N/2)
 
 		temp = np.zeros((M,N))
-		temp[m:,n:] = np.abs(np.copy(_image[:m,:n])) #top-leff
+		temp[m:,n:] = np.abs(np.copy(_image[:m,:n])) #top-left
 		temp[m:,:n] = np.abs(np.copy(_image[:m,n:])) #top-right
-		temp[:m,n:] = np.abs(np.copy(_image[m:,:n])) #botton-leff
+		temp[:m,n:] = np.abs(np.copy(_image[m:,:n])) #botton-left
 		temp[:m,:n] = np.abs(np.copy(_image[m:,n:])) #botton-right
 
 		return temp
@@ -43,7 +43,7 @@ class DiscreteFourier(object):
 		return self.F
 
 	def dft(self):
-		ft = np.log(np.abs(self.shit(self.forward())) ** 2)
+		ft = mlog(np.abs(self.shit(self.forward())) ** 2)
 		cv.imshow("Fourier Transform", mnormalize(ft))
 
 	def idft(self, I):
@@ -63,8 +63,8 @@ class DiscreteFourier(object):
 		return self.f
 
 	def filter(self, _filter, _name = "Ideal Low-Pass"):
-		X = self.F * _filter
-		tdft  = np.log(np.abs(self.shit(X) ** 2))
+		X = self.F * self.shit(_filter)
+		tdft = mlog(np.abs(self.shit(X)) ** 2)
 
 		x = self.idft(X)
 		tidft = np.abs(x)

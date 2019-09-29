@@ -81,8 +81,20 @@ def mto_float(img_in):
     img_out = np.zeros(img_in.shape, float)
     for i in range(img_out.shape[0]):
         for j in range(img_out.shape[1]):
-        	img_out[i,j] = img_in[i,j].real
-        	#img_out[i,j] = abs(img_in[i,j].real)
-            #img_out[i,j] = sqrt(pow(img_in[i,j].real, 2) + pow(img_in[i,j].imag, 2))
+        	img_out[i,j] = abs(img_in[i,j])
 
     return img_out
+
+def mprint(img):
+	for i in range(img.shape[0]):
+		for j in range(img.shape[1]):
+			#print("%2.2f"%img[i,j], end = ' ')
+			print(img[i,j], end = ' ')
+		print()
+	print('\n')
+
+@np.vectorize
+def mlog(x):
+	if(x == 0):
+		x = 0.0000000001
+	return np.log(x)

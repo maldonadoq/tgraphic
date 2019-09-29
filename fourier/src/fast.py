@@ -9,7 +9,7 @@ def mfourier(img_in, tfilter, name = "Fast Fourier Transform"):
     tfft = tfft * tfilter
     tifft = mifast_fourier(tfft, m, n)
 
-    X = mnormalize(mto_float(tfft))
+    X = mnormalize(np.abs((tfft)))
     x = mnormalize(tifft)
 
     img_out = np.concatenate((X, x), axis=1)
