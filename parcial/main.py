@@ -6,15 +6,20 @@ sys.path.append('src/')
 from utils import *
 
 if __name__ == "__main__":
-    img = cv.imread('input/4.png', 0)
-    
+
+    img_name = 'input/4.png'
+    if (len(sys.argv) == 2):
+        img_name = sys.argv[1]
+
+    img = cv.imread(img_name, 0)
+
     s = msobel(img)
     t = mthreshold(s)
     w = mwatershed(t)
     ss = mssim(w)
 
-    cv.imshow('Sobel', mnormalize(s))
-    cv.imshow('Threshold', t)
+    #cv.imshow('Sobel', mnormalize(s))
+    #cv.imshow('Threshold', t)
     cv.imshow('Watershed', w)
     print('SSMI: ' + str(ss))
 
