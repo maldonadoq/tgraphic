@@ -1,63 +1,75 @@
+from skimage.morphology import watershed
+from skimage.feature import peak_local_max
+from skimage.metrics import structural_similarity as ssim
+from scipy import ndimage as ndi
+
 import numpy as np
 import cv2 as cv
 
 # Normalize into 0-255
-def mnormalize(img_in):
-    img_out = np.zeros(img_in.shape, dtype="uint8")
-    tmin = img_in.min()
-    tmax = img_in.max()
+def mnormalize(src):
+    img = np.zeros(src.shape, dtype="uint8")
+    tmin = src.min()
+    tmax = src.max()
     nmax = abs(tmax - tmin)
 
-    for i in range(img_out.shape[0]):
-        for j in range(img_out.shape[1]):
-            nv = ((img_in[i,j] - tmin) * 255)/nmax
-            img_out[i,j] = nv
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            nv = ((src[i,j] - tmin) * 255)/nmax
+            img[i,j] = nv
 
-    return img_out
+    return img
 
-# Applying Sobel Filter
-def tfilter(src):
-    src_out = np.zeros(src.shape, src.dtype)
-    rows, cols = src.shape[:2]
 
-    sx = np.array([[-1,0,1], [-2,0,2], [-1,0,1]])
-    sy = np.array([[1,2,1], [0,0,0], [-1,-2,-1]])
+def mboundary(src):
+    img = np.zeros(src.shape, dtype="uint8")
 
-    fsx = np.fft.fft2(sx)
-    fsy = np.fft.fft2(sy)
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if(src[i,j] > 0):
+                img[i,j] = 255
 
-    #fsx = np.fft.fftshift( np.fft.fft2(sx) )
-    #fsy = np.fft.fftshift( np.fft.fft2(sy) )
-    
-    step = 1
+    return img
 
-    for i in range(step, rows - step):
-        rt0 = i - step
-        rt1 = i + step + 1
-        for j in range(step, cols - step):
-            ct0 = j - step
-            ct1 = j + step + 1
-            window = src[rt0:rt1, ct0:ct1]
-            
-            hx = (window*sx).sum()
-            hy = (window*sy).sum()
+def mpadding(shape):
+    hx = np.zeros(shape)
+    hy = np.zeros(shape)
 
-            src_out[i,j] = hx + hy
-            
-    return src_out
+    cx = shape[0]//2
+    cy = shape[1]//2
 
-def tsobel(x):
+    hx[cx-1:cx+2, cy-1:cy+2] = np.array([[-1,0,1], [-2,0,2], [-1,0,1]])
+    hy[cx-1:cx+2, cy-1:cy+2] = np.array([[1,2,1], [0,0,0], [-1,-2,-1]])
+
+    return (hx,hy)
+
+def msobel(src):
 	# To Frequency Domain
-	X = np.fft.fft2(x)
-	#X = np.fft.fftshift(X)
+    X = np.fft.fft2(src)
+    h = mpadding(src.shape)
 
-	# Sobel Filter in FD
-	fX = tfilter(X)
+    Hx = np.fft.fft2(np.fft.fftshift(h[0]))
+    Hy = np.fft.fft2(np.fft.fftshift(h[1]))
 
-	# to Spatial Domain
-	#x = np.fft.ifftshift(fX)
-	x = np.fft.ifft2(fX)
-	x = np.abs(x)
-	x = mnormalize(x)
+    fx = np.abs(np.fft.ifft2(X * Hx))
+    fy = np.abs(np.fft.ifft2(X * Hy))
 
-	cv.imshow('Filter', x)
+    S = np.sqrt((fx*fx) + (fy*fy))
+    return S
+
+def mthreshold(src):
+    ret, T = cv.threshold(src, 120, 255, cv.THRESH_BINARY)
+    return T
+
+def mwatershed(src):
+    dist = ndi.distance_transform_edt(src)
+    local_maxi = peak_local_max(dist, indices=False, footprint=np.ones((3, 3)),
+                                labels=src)
+    markers = ndi.label(local_maxi)[0]
+    labels = watershed(-dist, markers, mask=src)
+
+    return mboundary(markers)
+
+def mssim(src):
+    tssim = ssim(src, src, data_range=src.max() - src.min())
+    return tssim
