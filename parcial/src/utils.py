@@ -70,6 +70,6 @@ def mwatershed(src):
 
     return mboundary(markers)
 
-def mssim(src):
-    tssim = ssim(src, src, data_range=src.max() - src.min())
+def mssim(src, truth):
+    tssim = ssim(src, truth, data_range=src.max() - src.min())
     return tssim
