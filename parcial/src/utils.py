@@ -31,22 +31,26 @@ def mboundary(src):
 
     return img
 
-def mpadding(shape):
+def mpadding(shape, dt):
     hx = np.zeros(shape)
     hy = np.zeros(shape)
 
     cx = shape[0]//2
     cy = shape[1]//2
 
-    hx[cx-1:cx+2, cy-1:cy+2] = np.array([[-1,0,1], [-2,0,2], [-1,0,1]])
-    hy[cx-1:cx+2, cy-1:cy+2] = np.array([[1,2,1], [0,0,0], [-1,-2,-1]])
-
+    if(dt == 1):
+        hx[cx-1:cx+2, cy-1:cy+2] = np.array([[-1,0,1], [-2,0,2], [-1,0,1]])
+        hy[cx-1:cx+2, cy-1:cy+2] = np.array([[1,2,1], [0,0,0], [-1,-2,-1]])
+    elif(dt == 2):
+        hx[cx-1:cx+2, cy-1:cy+2] = np.array([[1,0,-1], [1,0,-1], [1,0,-1]])
+        hy[cx-1:cx+2, cy-1:cy+2] = np.array([[1,1,1], [0,0,0], [-1,-1,-1]])
+        
     return (hx,hy)
 
-def msobel(src):
+def mfilter(src,dt = 1):
 	# To Frequency Domain
     X = np.fft.fft2(src)
-    h = mpadding(src.shape)
+    h = mpadding(src.shape,dt)
 
     Hx = np.fft.fft2(np.fft.fftshift(h[0]))
     Hy = np.fft.fft2(np.fft.fftshift(h[1]))

@@ -17,7 +17,12 @@ if __name__ == "__main__":
     img = cv.imread(img_name, 0)
     truth = cv.imread(truth_name, 0)
 
-    s = msobel(img)
+    '''
+        1 = Sobel
+        2 = Prewit
+    '''
+
+    s = mfilter(img,1)
     t = mthreshold(s)
     w = mwatershed(t)
 
