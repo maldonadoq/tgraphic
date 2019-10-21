@@ -5,6 +5,15 @@ from scipy import ndimage as ndi
 
 import numpy as np
 import cv2 as cv
+import os
+
+def mimgs(tpath):
+    files = []
+    for r, d, f in os.walk(tpath):
+        for file in f:
+            if '.png' in file:
+                files.append(os.path.join(r, file))
+    return files
 
 # Normalize into 0-255
 def mnormalize(src):
@@ -44,7 +53,7 @@ def mpadding(shape, dt):
     elif(dt == 2):
         hx[cx-1:cx+2, cy-1:cy+2] = np.array([[1,0,-1], [1,0,-1], [1,0,-1]])
         hy[cx-1:cx+2, cy-1:cy+2] = np.array([[1,1,1], [0,0,0], [-1,-1,-1]])
-        
+
     return (hx,hy)
 
 def mfilter(src,dt = 1):

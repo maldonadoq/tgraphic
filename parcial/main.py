@@ -22,7 +22,7 @@ if __name__ == "__main__":
         2 = Prewit
     '''
 
-    s = mfilter(img,1)
+    s = mfilter(img)
     t = mthreshold(s)
     w = mwatershed(t)
 

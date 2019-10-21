@@ -23,19 +23,19 @@ def blur(src, a, t):
 
 if __name__ == "__main__":
 
-    img_name = 'input/cell_img/3.png'
+    img_name = 'input/cell_img/7.png'
     if (len(sys.argv) == 2):
         img_name = sys.argv[1]
 
     img = cv.imread(img_name, 0)
 
-    s = msobel(img)
+    s = mfilter(img)
     t = mthreshold(s)
     w = mwatershed(t)
-    
+
     b = blur(w,3,7)
     wb = mwatershed(b)
 
-    cv.imwrite('input/cell_truth/3.png', wb)
+    cv.imwrite('input/cell_truth/7.png', wb)
     cv.waitKey()
     cv.destroyAllWindows()
