@@ -5,6 +5,14 @@ def square(dim):
     strt = np.ones((dim,dim))
     return strt
 
+def inside(dim):
+    strt = np.zeros((dim,dim))
+    c = dim//3
+
+    strt[c:c, dim:dim] = 1
+
+    return strt
+
 def circle(dim):
     strt = np.zeros((dim,dim))
     c = (dim-1)/2
@@ -44,12 +52,32 @@ def diamond(dim):
 
     return strt
 
-def structure(id = 0, dim = 3):
+def structure_dynamic(id = 0, dim = 3):
     if(id == 0):
-        s = square(dim)
+        s = inside(dim)
     elif(id == 1):
-        s = circle(dim)
+        s = square(dim)
     elif(id == 2):
+        s = circle(dim)
+    elif(id == 3):
         s = cross(dim)
+    else:
+        s = square(dim)
+
+    return s
+
+def structure_static(id):
+    if(id == 0):
+        s = np.array([[0,1,0], [0,1,0], [0,1,0]])
+    elif(id == 1):
+        s = np.array([[0,1,0], [1,1,1], [0,1,0]])
+    elif(id == 2):
+        s = np.array([[0,0,0], [1,1,1], [0,0,0]])
+    elif(id == 3):
+        s = np.array([[0,0,1,0,0], [0,1,1,1,0], [1,1,1,1,1], [0,1,1,1,0], [0,0,1,0,0]])
+    elif(id == 4):
+        s = np.array([[0,1,1], [0,1,1], [0,0,0]])
+    else:
+        s = np.array([[0,1,0], [0,1,0], [0,1,0]])
 
     return s
