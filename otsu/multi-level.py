@@ -10,7 +10,7 @@ from utils import *
 if __name__ == "__main__":
     
     name = '../images/input/casa.png'
-    n = 6
+    n = 4
     if(len(sys.argv) == 2):
         n = int(sys.argv[1])
     elif(len(sys.argv) == 3):
