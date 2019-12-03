@@ -1,4 +1,7 @@
-#Images output
+# C++
+*.out
+
+# Images output
 */output/*
 */output/*
 

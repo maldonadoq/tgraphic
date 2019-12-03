@@ -36,8 +36,7 @@ def encoding(word):
 
 if __name__ == "__main__":
 
-    #word = 'maldonado'
-    word = 'ABRACADABRA'
+    word = 'maldonado'
 
     if(len(sys.argv) == 2):
         word = sys.argv[1]
