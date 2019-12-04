@@ -79,5 +79,12 @@ if __name__ == "__main__":
     encode = encoding(word)
     decode = decoding(encode)
 
-    print('Encode: ', encode)
-    print('Decode: ', decode)
+    snorm = len(word)
+    senco = len(encode)    
+
+    print('Encode      : ', encode)
+    print('Decode      : ', decode, '\n')
+
+    print('Normal      : ', snorm)
+    print('Compression : ', senco)
+    print('Rate of C.  : ', snorm/senco)
